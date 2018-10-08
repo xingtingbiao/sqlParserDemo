@@ -4,6 +4,7 @@ import org.antlr.runtime.CommonToken;
 import org.apache.hadoop.hive.ql.lib.Node;
 import org.apache.hadoop.hive.ql.parse.ASTNode;
 import org.apache.hadoop.hive.ql.parse.HiveParser;
+import parser.base.BaseUtil;
 import parser.base.TLiteral;
 import parser.base.TResultColumn;
 
@@ -91,7 +92,7 @@ public class TFunParams {
           this.addLiterals(literal);
           break;
         default:
-          this.fun_funParams(funParamNode.getChildren());
+          if (!BaseUtil.childIsNil(funParamNode)) this.fun_funParams(funParamNode.getChildren());
           break;
         // ...后面如果还有其他类型, 直接追加case
       }
