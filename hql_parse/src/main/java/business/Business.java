@@ -12,6 +12,7 @@ import parser.statement.TCustomSqlStatement;
 import parser.statement.alter.TAlterSqlStatement;
 import parser.statement.create.TCreateSqlStatement;
 import parser.statement.insert.TInsertSqlStatement;
+import parser.statement.select.TJoin;
 import parser.statement.select.TSelectSqlStatement;
 import parser.statement.select.TTable;
 
@@ -141,10 +142,10 @@ public class Business {
   }
 
   public List<TCustomSqlStatement> getParentWithChild(String sql) throws ParseException {
-    List<TCustomSqlStatement> parentWithChild = null;
+    Set<TCustomSqlStatement> parentWithChild = null;
     TCustomSqlStatement statement = ParseASTNode.parseNode(sql);
     if (null != statement) {
-      parentWithChild = new ArrayList<TCustomSqlStatement>();
+      parentWithChild = new HashSet<TCustomSqlStatement>();
       parentWithChild.add(statement);
       TSelectSqlStatement selectSqlStatement;
       switch (statement.getType()) {
@@ -167,10 +168,11 @@ public class Business {
           break;
       }
     }
-    return parentWithChild;
+    if (null != parentWithChild) return new ArrayList<>(parentWithChild);
+    return null;
   }
 
-  private void packSelectAtomicList(List<TCustomSqlStatement> parentWithChild, TSelectSqlStatement selectSqlStatement) {
+  private void packSelectAtomicList(Set<TCustomSqlStatement> parentWithChild, TSelectSqlStatement selectSqlStatement) {
     BloodRelation bloodRelation = new BloodRelation(selectSqlStatement);
     bloodRelation.analysisBlood();
     List<AtomicRouteTSelect> atomicRouteTSelects = bloodRelation.getAtomicRouteTSelects();
@@ -436,22 +438,57 @@ public class Business {
     List<TCustomSqlStatement> selects = backAtomicSelects(states);
     if (null != selects) {
       for (TCustomSqlStatement select : selects) {
-        TTable table = select.getTable();
         TResultColumnList columnList = select.getColumnList();
-        TableName tableName = table.getTableName();
-        if (null == tableName) {  //理论上tableName不会为空, 防止代码异常, 抛出此异常
-          throw new QuantityException("The table name resolution is abnormal. Please contact us!");
-        }
-        LibraryName libraryName = table.getLibraryName();
-        if (checkLibraryName(libraryName, dbName)) {
-          Map<Boolean, String> map = checkTableAndColumn(tableName, columnList, hiveTables);
-          if (null != map.get(true)) { //这里检查为false继续检查, 为true直接返回, 跳出循环
-            return map;
-          }
-        }
+        // 这里是所有的最底层的物理表的select语句(select .. from t和select .. from a join b on ..)
+        TTable table = select.getTable(); // select .. from t
+        TJoin joins = select.getJoins();  // select .. from a join b on ..
+        Map<Boolean, String> tMap = getTableMap(dbName, hiveTables, columnList, table);
+        if (tMap != null) return tMap;
+        Map<Boolean, String> jMap = getJoinMap(dbName, hiveTables, columnList, joins);
+        if (jMap != null) return jMap;
       }
     }
     return new HashMap<Boolean, String>();
+  }
+
+  private static Map<Boolean, String> getTableMap(String dbName, List<TableandColumns> hiveTables, TResultColumnList columnList, TTable table) throws QuantityException {
+    if (null != table) {
+      TableName tableName = table.getTableName();
+      if (null == tableName) {  //理论上tableName不会为空, 防止代码异常, 抛出此异常
+        throw new QuantityException("The table name resolution is abnormal. Please contact us!");
+      }
+      LibraryName libraryName = table.getLibraryName();
+      if (checkLibraryName(libraryName, dbName)) {
+        Map<Boolean, String> map = checkTableAndColumn(tableName, columnList, hiveTables);
+        if (null != map.get(true)) { //这里检查为false继续检查, 为true直接返回, 跳出循环
+          return map;
+        }
+      }
+    }
+    return null;
+  }
+
+  private static Map<Boolean, String> getJoinMap(String dbName, List<TableandColumns> hiveTables, TResultColumnList columnList, TJoin joins) throws QuantityException {
+    if (null != joins) {
+      // 因为是物理查询语句, 所以所有joins里面的都应该是物理表, 由于是左右结构, 所以需要一个递归函数去获取所有的TTable
+      List<TTable> tables = new ArrayList<>();
+      getAllAtomicTableWithJoins(joins, tables);
+      if (tables.size() > 0) {
+        for (TTable table : tables) {
+          Map<Boolean, String> tMap = getTableMap(dbName, hiveTables, columnList, table);
+          if (tMap != null) return tMap;
+        }
+      }
+    }
+    return null;
+  }
+
+  private static void getAllAtomicTableWithJoins(TJoin joins, List<TTable> tables) {
+    tables.add(joins.getRightTable());
+    TJoin leftJoin = joins.getLeftJoin();
+    TTable leftTable = joins.getLeftTable();
+    if (null != leftTable) tables.add(leftTable);
+    if (null != leftJoin) getAllAtomicTableWithJoins(leftJoin, tables);
   }
 
   private static Map<Boolean, String> checkTableAndColumn(TableName tableName, TResultColumnList columnList, List<TableandColumns> hiveTables) throws QuantityException {

@@ -65,4 +65,16 @@ public class PlayTest {
     String s1 = new AutomaticRouting().autoRoute(s, route);
     System.out.println(s1);
   }
+
+  @Test
+  public void test005() throws ParseException {
+    String s = "select a.name as name, b.class as class from student a join student b on a.id = b.id";
+//    ParseDriver parse = new ParseDriver();
+//    ASTNode astNode = parse.parse(s);
+//    System.out.println(astNode.dump());
+//    TCustomSqlStatement statement = TCustomSqlStatement.parseASTNode(astNode);
+//    System.out.println(statement);
+    List<TCustomSqlStatement> parentWithChild = new Business().getParentWithChild(s);
+    System.out.println(parentWithChild);
+  }
 }
