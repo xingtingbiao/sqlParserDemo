@@ -163,8 +163,8 @@ public class TSelectSqlStatement extends TCustomSqlStatement {
       case HiveParser.TOK_DESTINATION:
         break;
       case HiveParser.TOK_SELECTDI:
-        //todo
-        break;
+//        //todo
+//        break;
       case HiveParser.TOK_SELECT:
         this.initColumnList().fun_TOK_SELECT(node);
         break;

@@ -103,6 +103,19 @@ public class MyTest {
     System.out.println("done");
   }
 
+  @Test
+  public void test006() throws ParseException {
+    Map<String, Integer> whiteFunctions = new HashMap<>();
+    Map<String, List<String>> tableandSensitiveColumns = new HashMap<>();
+    List<String> lists = new ArrayList<>();
+    lists.add("belong_area_cn_name");
+    tableandSensitiveColumns.put("dwd_loc_country_ds", lists);
+    Business business = new Business();
+    business.filterSensitiveFields(TestSqls.s1011, tableandSensitiveColumns, whiteFunctions);
+    // String regex = "[&<>\"':\\[\\]$()%+\\/\\\\#`*,-;=|^]";
+    System.out.println("done");
+  }
+
   private String getStr02() {
     String s01 = "select\n" +
         "    count(t1.imei)  as taobao_users, t1.name\n" +
