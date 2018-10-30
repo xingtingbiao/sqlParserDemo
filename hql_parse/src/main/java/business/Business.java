@@ -485,7 +485,9 @@ public class Business {
 
   private static void getAllAtomicTableWithJoins(TJoin joins, List<TTable> tables) {
     TTable rightTable = joins.getRightTable();
-    if (null != rightTable) tables.add(rightTable); //判断出物理表和子查询结合的可能
+    if (null != rightTable && rightTable.getTableName() != null && rightTable.getSubQuery() == null) {
+      tables.add(rightTable); //判断出物理表和子查询结合的可能
+    }
     TJoin leftJoin = joins.getLeftJoin();
     TTable leftTable = joins.getLeftTable();
     if (null != leftTable) tables.add(leftTable);
