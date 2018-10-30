@@ -470,7 +470,7 @@ public class Business {
 
   private static Map<Boolean, String> getJoinMap(String dbName, List<TableandColumns> hiveTables, TResultColumnList columnList, TJoin joins) throws QuantityException {
     if (null != joins) {
-      // 因为是物理查询语句, 所以所有joins里面的都应该是物理表, 由于是左右结构, 所以需要一个递归函数去获取所有的TTable
+      // 因为是物理查询语句, 所以所有joins里面的都应该是物理表或者**是物理表和子查询的结合**, 由于是左右结构, 所以需要一个递归函数去获取所有的TTable
       List<TTable> tables = new ArrayList<>();
       getAllAtomicTableWithJoins(joins, tables);
       if (tables.size() > 0) {
@@ -484,7 +484,8 @@ public class Business {
   }
 
   private static void getAllAtomicTableWithJoins(TJoin joins, List<TTable> tables) {
-    tables.add(joins.getRightTable());
+    TTable rightTable = joins.getRightTable();
+    if (null != rightTable) tables.add(rightTable); //判断出物理表和子查询结合的可能
     TJoin leftJoin = joins.getLeftJoin();
     TTable leftTable = joins.getLeftTable();
     if (null != leftTable) tables.add(leftTable);
@@ -493,6 +494,7 @@ public class Business {
 
   private static Map<Boolean, String> checkTableAndColumn(TableName tableName, TResultColumnList columnList, List<TableandColumns> hiveTables) throws QuantityException {
     Map<Boolean, String> map = new HashMap<>();
+    // todo
     Map<String, TableandColumns> tabColMap = hiveTables.stream().collect(Collectors.toMap(TableandColumns::getTableName, Function.identity()));
     TableandColumns tabWithCols = tabColMap.get(tableName.getName());
     if (null != tabWithCols) {

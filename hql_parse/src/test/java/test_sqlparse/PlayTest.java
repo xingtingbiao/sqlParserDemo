@@ -68,13 +68,13 @@ public class PlayTest {
 
   @Test
   public void test005() throws ParseException {
-    String s = "select a.name as name, b.class as class from student a join student b on a.id = b.id";
+//    String s = "select a.name as name, b.class as class from student a join student b on a.id = b.id";
 //    ParseDriver parse = new ParseDriver();
 //    ASTNode astNode = parse.parse(s);
 //    System.out.println(astNode.dump());
 //    TCustomSqlStatement statement = TCustomSqlStatement.parseASTNode(astNode);
 //    System.out.println(statement);
-    List<TCustomSqlStatement> parentWithChild = new Business().getParentWithChild(s);
+    List<TCustomSqlStatement> parentWithChild = new Business().getParentWithChild(TestSqls.s1010);
     System.out.println(parentWithChild);
   }
 }
