@@ -490,7 +490,9 @@ public class Business {
     }
     TJoin leftJoin = joins.getLeftJoin();
     TTable leftTable = joins.getLeftTable();
-    if (null != leftTable) tables.add(leftTable);
+    if (null != leftTable && leftTable.getTableName() != null && leftTable.getSubQuery() == null) {
+      tables.add(leftTable);
+    }
     if (null != leftJoin) getAllAtomicTableWithJoins(leftJoin, tables);
   }
 
