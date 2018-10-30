@@ -82,8 +82,7 @@ public class BusinessUtil {
         break;
       }
     }
-    formatMap = backFormatMap(end, code1, formatMap, endRight);
-    return formatMap;
+    return backFormatMap(end, code1, formatMap, endRight);
   }
 
   private static Map<Integer, String> backFormatMap(String end, String code1, Map<Integer, String> formatMap, int endRight) throws SQLFormatException {
