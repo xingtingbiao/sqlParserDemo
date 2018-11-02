@@ -1,5 +1,8 @@
 package lineage;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import parser.base.Alias;
 import parser.base.LibraryName;
 import parser.base.TResultColumn;
@@ -8,6 +11,9 @@ import parser.base.TableName;
 /**
  * 每个字段的血缘关系链, 由外到里
  */
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor(staticName = "of")
 public class ColumnLineage {
     /**
      * 字段所属的表的别名
