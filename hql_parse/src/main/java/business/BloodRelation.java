@@ -198,7 +198,7 @@ public class BloodRelation {
     }
   }
 
-  private ActionRoute dealRouteWithLateralView(ActionRoute actionRoute) {
+  public ActionRoute dealRouteWithLateralView(ActionRoute actionRoute) {
     if (null != actionRoute) {
       // 都不会存在null值元素
       List<TResultColumn> colList = actionRoute.getColumnList().getColList();
