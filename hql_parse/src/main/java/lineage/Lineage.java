@@ -1,5 +1,8 @@
-package business;
+package lineage;
 
+import business.ActionRoute;
+import business.AtomicRouteTSelect;
+import business.BloodRelation;
 import main.ParseASTNode;
 import org.apache.hadoop.hive.ql.parse.ParseException;
 import parser.statement.TCustomSqlStatement;
@@ -23,12 +26,8 @@ public class Lineage {
 
     public Object columnLineage(String sql) throws ParseException {
         this.initActionRoutes(sql);
-        return this.analysisActionRoutes();
-    }
-
-    private Object analysisActionRoutes() {
         if (null != this.actionRoutes && this.actionRoutes.size() > 0) {
-            // TODO 这里就是最主要的分析函数, 分析完需要返回最外层每个列的所有血缘关系1::N
+            return this.analysisActionRoutes();
         }
         return null;
     }
@@ -48,6 +47,12 @@ public class Lineage {
             }
         }
         if (routes.size() > 0) this.actionRoutes = routes;
+    }
+
+    private Object analysisActionRoutes() {
+        // TODO 这里就是最主要的分析函数, 分析完需要返回最外层每个列的所有血缘关系1::N
+
+        return null;
     }
 
     public TCustomSqlStatement getStatement() {
