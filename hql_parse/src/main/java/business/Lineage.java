@@ -28,7 +28,7 @@ public class Lineage {
 
     private Object analysisActionRoutes() {
         if (null != this.actionRoutes && this.actionRoutes.size() > 0) {
-
+            // TODO 这里就是最主要的分析函数, 分析完需要返回最外层每个列的所有血缘关系1::N
         }
         return null;
     }
