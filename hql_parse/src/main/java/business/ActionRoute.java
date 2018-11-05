@@ -3,6 +3,8 @@ package business;
 
 import java.util.*;
 
+import lineage.ColumnLineage;
+import lombok.Data;
 import parser.base.*;
 import parser.statement.function.TFunParams;
 import parser.statement.function.TFunctionCall;
@@ -39,6 +41,8 @@ public class ActionRoute {
    */
   private List<TLateralView> lateralViews;
 
+  private List<ColumnLineage> columnLineages;
+
   ActionRoute() {
   }
 
@@ -64,70 +68,6 @@ public class ActionRoute {
     return this.filterColumns;
   }
 
-  Alias getAlias() {
-    return this.alias;
-  }
-
-  void setAlias(Alias alias) {
-    this.alias = alias;
-  }
-
-  TableName getTableName() {
-    return this.tableName;
-  }
-
-  void setTableName(TableName tableName) {
-    this.tableName = tableName;
-  }
-
-  LibraryName getLibraryName() {
-    return libraryName;
-  }
-
-  void setLibraryName(LibraryName libraryName) {
-    this.libraryName = libraryName;
-  }
-
-  TResultColumnList getColumnList() {
-    return this.columnList;
-  }
-
-  void setColumnList(TResultColumnList columnList) {
-    this.columnList = columnList;
-  }
-
-  Set<TResultColumn> getFilterColumns() {
-    return filterColumns;
-  }
-
-  void setFilterColumns(Set<TResultColumn> filterColumns) {
-    this.filterColumns = filterColumns;
-  }
-
-//  public ActionRoute getpRoute() {
-//    return pRoute;
-//  }
-//
-//  public void setpRoute(ActionRoute pRoute) {
-//    this.pRoute = pRoute;
-//  }
-
-  ActionRoute getcRoute() {
-    return cRoute;
-  }
-
-  void setcRoute(ActionRoute cRoute) {
-    this.cRoute = cRoute;
-  }
-
-  List<TLateralView> getLateralViews() {
-    return lateralViews;
-  }
-
-  void setLateralViews(List<TLateralView> lateralViews) {
-    this.lateralViews = lateralViews;
-  }
-
   /**
    * 根据分析好的血缘关系图, 以及给定的敏感字段参数, 计算整个sql的敏感字段信息图谱
    * @param mapFields mapFields 指定敏感源的map类型参数 key为表名, value是表名对应的敏感字段的集合
@@ -135,6 +75,7 @@ public class ActionRoute {
    * @return 返回计算完敏感信息后的血缘关系图谱
    */
   ActionRoute filter(Map<String, List<String>> mapFields, Map<String, Integer> funMap) {
+    //TODO null == mapFields的时候就是默认所有字段,即解析所有字段的血缘关系
     ActionRoute route = null;
     List<String> filterCols = new ArrayList<>();
     // this.initFilterColumns();
@@ -327,4 +268,67 @@ public class ActionRoute {
     return isNotLegalFunParam;
   }
 
+  public Alias getAlias() {
+    return alias;
+  }
+
+  public void setAlias(Alias alias) {
+    this.alias = alias;
+  }
+
+  public TableName getTableName() {
+    return tableName;
+  }
+
+  public void setTableName(TableName tableName) {
+    this.tableName = tableName;
+  }
+
+  public LibraryName getLibraryName() {
+    return libraryName;
+  }
+
+  public void setLibraryName(LibraryName libraryName) {
+    this.libraryName = libraryName;
+  }
+
+  public TResultColumnList getColumnList() {
+    return columnList;
+  }
+
+  public void setColumnList(TResultColumnList columnList) {
+    this.columnList = columnList;
+  }
+
+  public Set<TResultColumn> getFilterColumns() {
+    return filterColumns;
+  }
+
+  public void setFilterColumns(Set<TResultColumn> filterColumns) {
+    this.filterColumns = filterColumns;
+  }
+
+  public ActionRoute getcRoute() {
+    return cRoute;
+  }
+
+  public void setcRoute(ActionRoute cRoute) {
+    this.cRoute = cRoute;
+  }
+
+  public List<TLateralView> getLateralViews() {
+    return lateralViews;
+  }
+
+  public void setLateralViews(List<TLateralView> lateralViews) {
+    this.lateralViews = lateralViews;
+  }
+
+  public List<ColumnLineage> getColumnLineages() {
+    return columnLineages;
+  }
+
+  public void setColumnLineages(List<ColumnLineage> columnLineages) {
+    this.columnLineages = columnLineages;
+  }
 }

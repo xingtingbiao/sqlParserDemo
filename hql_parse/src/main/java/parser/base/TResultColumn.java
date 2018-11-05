@@ -24,6 +24,10 @@ public class TResultColumn {
   public TResultColumn() {
   }
 
+  public TResultColumn(boolean allColumn) {
+    this.allColumn = allColumn;
+  }
+
   public TResultColumn(ColName colName) {
     this.colName = colName;
   }
