@@ -16,9 +16,7 @@ import parser.statement.function.TFunctionCall;
 import parser.statement.select.TSelectSqlStatement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 分析sql血缘关系类, 虚表-->物理表(1::N), 虚列-->物理列(1::N)
@@ -107,31 +105,6 @@ public class Lineage {
             // throw new QuantityException("Table field parsing is incorrect. Please check carefully!");
             return null;
         }
-//
-//
-//        List<String> filterCols = new ArrayList<>();
-//        if (null != route.getTableName() || null != route.getAlias()) {
-//            List<String> colNames;
-//            String tName = backTabName();
-//            colNames = mapFields.get(tName);
-//            if (null != route.getAlias()) tName = route.getAlias().getName();  //如果表名和别名同时存在的情况
-//
-//            if (null != colNames && colNames.size() > 0 && null != columnList && columnList.size() > 0) {
-//                this.checkAllCol(colNames, tName); // select * from t
-//                filterCols = this.packageFilterCols(tName, filterCols, colNames, funMap);
-//            }
-//        }
-//
-//        Map<String, List<String>> map;
-//        if (null != this.cRoute && filterCols.size() > 0) {
-//            Alias alias = this.cRoute.getAlias();
-//            TableName tableName = this.cRoute.getTableName();
-//            map = backNewMap(filterCols, null, alias, tableName);
-//            route = this.cRoute.filter(map, funMap);
-//        }
-//        if (null == this.cRoute && null != this.columnList && this.columnList.size() > 0) {
-//            route = this;
-//        }
     }
 
     private List<ColumnLineage> analysisColumnLineages(ActionRoute route, List<ColumnLineage> columnLineages) {
