@@ -36,6 +36,9 @@ public class TLateralView {
           case HiveParser.TOK_SUBQUERY:
             selectSqlStatement.initTable().fun_TOK_SubQUERY(node);
             break;
+          case HiveParser.TOK_TABREF:
+            selectSqlStatement.initTable().fun_TOK_TABREF(node);
+            break;
           default:
             break;
         }

@@ -11,7 +11,7 @@ public class BugTest {
     @Test
     public void test001() throws ParseException {
         ParseDriver parse = new ParseDriver();
-        ASTNode astNode = parse.parse(TestSqls.s1011);
+        ASTNode astNode = parse.parse(TestSqls.s1012);
         System.out.println(astNode.dump());
         TCustomSqlStatement statement = TCustomSqlStatement.parseASTNode(astNode);
         System.out.println(statement);
